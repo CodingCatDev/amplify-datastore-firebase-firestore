@@ -1,0 +1,140 @@
+# this is an auto generated file. This will be overwritten
+query SyncFvDRooms(
+  $filter: ModelFvDRoomFilterInput
+  $limit: Int
+  $nextToken: String
+  $lastSync: AWSTimestamp
+) {
+  syncFvDRooms(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    lastSync: $lastSync
+  ) {
+    items {
+      id
+      name
+      users {
+        nextToken
+        startedAt
+      }
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+    nextToken
+    startedAt
+  }
+}
+query GetFvDRoom($id: ID!) {
+  getFvDRoom(id: $id) {
+    id
+    name
+    users {
+      items {
+        id
+        roomID
+        expression
+        last_changed
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
+query ListFvDRooms(
+  $filter: ModelFvDRoomFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listFvDRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      name
+      users {
+        nextToken
+        startedAt
+      }
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+    nextToken
+    startedAt
+  }
+}
+query SyncFvDUsers(
+  $filter: ModelFvDUserFilterInput
+  $limit: Int
+  $nextToken: String
+  $lastSync: AWSTimestamp
+) {
+  syncFvDUsers(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    lastSync: $lastSync
+  ) {
+    items {
+      id
+      roomID
+      expression
+      last_changed
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+    nextToken
+    startedAt
+  }
+}
+query GetFvDUser($id: ID!) {
+  getFvDUser(id: $id) {
+    id
+    roomID
+    expression
+    last_changed
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
+query ListFvDUsers(
+  $filter: ModelFvDUserFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listFvDUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      roomID
+      expression
+      last_changed
+      _version
+      _deleted
+      _lastChangedAt
+      createdAt
+      updatedAt
+    }
+    nextToken
+    startedAt
+  }
+}

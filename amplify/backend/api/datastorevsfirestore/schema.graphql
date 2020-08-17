@@ -1,0 +1,13 @@
+type FvDRoom @model {
+  id: ID!
+  name: String!
+  users: [FvDUser] @connection(keyName: "byRoom", fields: ["id"])
+}
+
+type FvDUser @model
+  @key(name: "byRoom", fields: ["roomID", "expression"]) {
+  id: ID!
+  roomID: ID!
+  expression: [String]
+  last_changed: AWSDateTime
+}

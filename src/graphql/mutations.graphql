@@ -1,0 +1,136 @@
+# this is an auto generated file. This will be overwritten
+mutation CreateFvDRoom(
+  $input: CreateFvDRoomInput!
+  $condition: ModelFvDRoomConditionInput
+) {
+  createFvDRoom(input: $input, condition: $condition) {
+    id
+    name
+    users {
+      items {
+        id
+        roomID
+        expression
+        last_changed
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
+mutation UpdateFvDRoom(
+  $input: UpdateFvDRoomInput!
+  $condition: ModelFvDRoomConditionInput
+) {
+  updateFvDRoom(input: $input, condition: $condition) {
+    id
+    name
+    users {
+      items {
+        id
+        roomID
+        expression
+        last_changed
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
+mutation DeleteFvDRoom(
+  $input: DeleteFvDRoomInput!
+  $condition: ModelFvDRoomConditionInput
+) {
+  deleteFvDRoom(input: $input, condition: $condition) {
+    id
+    name
+    users {
+      items {
+        id
+        roomID
+        expression
+        last_changed
+        _version
+        _deleted
+        _lastChangedAt
+        createdAt
+        updatedAt
+      }
+      nextToken
+      startedAt
+    }
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
+mutation CreateFvDUser(
+  $input: CreateFvDUserInput!
+  $condition: ModelFvDUserConditionInput
+) {
+  createFvDUser(input: $input, condition: $condition) {
+    id
+    roomID
+    expression
+    last_changed
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
+mutation UpdateFvDUser(
+  $input: UpdateFvDUserInput!
+  $condition: ModelFvDUserConditionInput
+) {
+  updateFvDUser(input: $input, condition: $condition) {
+    id
+    roomID
+    expression
+    last_changed
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
+mutation DeleteFvDUser(
+  $input: DeleteFvDUserInput!
+  $condition: ModelFvDUserConditionInput
+) {
+  deleteFvDUser(input: $input, condition: $condition) {
+    id
+    roomID
+    expression
+    last_changed
+    _version
+    _deleted
+    _lastChangedAt
+    createdAt
+    updatedAt
+  }
+}
