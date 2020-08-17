@@ -6,6 +6,7 @@ import { Observable, BehaviorSubject, from, Subscription } from 'rxjs';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { map, shareReplay } from 'rxjs/operators';
 import { async } from 'rxjs/internal/scheduler/async';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-captures',
@@ -13,6 +14,9 @@ import { async } from 'rxjs/internal/scheduler/async';
   styles: [`
     button{
       white-space: pre-wrap;
+    }
+    [hidden] {
+      display: none !important;
     }
   `]
 })
@@ -43,7 +47,7 @@ export class CapturesComponent implements AfterViewInit, OnDestroy {
       map(result => result.matches),
       shareReplay()
     );
-
+  showBoxes = true;
   constructor(private breakpointObserver: BreakpointObserver) {  }
 
   ngAfterViewInit(): void {
@@ -170,11 +174,23 @@ export class CapturesComponent implements AfterViewInit, OnDestroy {
           await faceapi.loadFaceExpressionModel(MODEL_URL);
 
           setInterval(async () => {
-            const result = await faceapi.detectAllFaces(
+            const detections = await faceapi.detectAllFaces(
               this.video.nativeElement, new faceapi.SsdMobilenetv1Options({minConfidence: this._MINCONF}))
               .withFaceExpressions();
             this.loading$.next(false);
-            this.expressions$.next(result
+            const videoBounds = this.video.nativeElement.getBoundingClientRect() as DOMRect;
+            const detectionsForSize = faceapi.resizeResults(detections,
+              { width: videoBounds.width,
+                height: videoBounds.height
+            });
+            const canvas = document.getElementById('overlay') as HTMLCanvasElement;
+            canvas.width = videoBounds.width;
+            canvas.height = videoBounds.height;
+            canvas.style.position = `absolute`;
+            canvas.style.top = `${videoBounds.top}px`;
+            canvas.style.left = `${this.video.nativeElement.offsetLeft}px`;
+            faceapi.draw.drawDetections(canvas, detectionsForSize);
+            this.expressions$.next(detections
               .map((r) => {
                 if (r.detection.score > this._MINCONF) {
                   return Object.keys(r.expressions).reduce((a, b) =>
@@ -274,7 +290,9 @@ export class CapturesComponent implements AfterViewInit, OnDestroy {
         });
     });
   }
-
+  showBoxesChange(event: MatSlideToggleChange): void{
+    this.showBoxes = event.checked;
+  }
 }
 export class WebcamMirrorProperties {
   public x: string;  // ["auto", "always", "never"]

@@ -9,15 +9,22 @@
   "
 ></ng-container>
 <ng-template #main let-isHandset="isHandset" let-loading="loading" let-expressions="expressions">
+  <canvas id="overlay" [hidden]="!showBoxes"></canvas>
   <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="space-around">
     <mat-card [fxFlex]="100" *ngIf="!loading; else spinner">
       <mat-card-header>
-        <mat-card-title fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title fxLayout="row wrap" fxLayoutAlign="start center">
           <div fxFlex="initial">Change Camera</div>
           <div fxFlex="auto"></div>
           <button mat-icon-button (click)="rotateVideoInput(true)">
             <mat-icon>switch_video</mat-icon>
           </button>
+          <mat-slide-toggle
+          class="example-margin"
+          [checked]="showBoxes"
+          (change)="showBoxesChange($event)">
+            Show Boxes
+          </mat-slide-toggle>
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>

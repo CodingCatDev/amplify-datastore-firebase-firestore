@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { CapturesRoutingModule } from './captures-routing.module';
 import { CapturesComponent } from './captures.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { Routes } from '@angular/router';
 
@@ -31,6 +32,7 @@ const routes: Routes = [
     MatListModule,
     MatButtonModule,
     MatIconModule,
+    MatSlideToggleModule,
     FirestoreModule,
     DatastoreModule,
   ]
