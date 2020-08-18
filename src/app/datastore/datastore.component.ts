@@ -24,8 +24,9 @@ export class DatastoreComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private fireAuth: AngularFireAuth) {
-        Amplify.Logger.LOG_LEVEL = 'DEBUG';
-     }
+    // Turn this on if you want to debug
+    // Amplify.Logger.LOG_LEVEL = 'DEBUG';
+  }
 
   ngOnInit(): void {
     this.fireAuth.user.pipe(
@@ -60,7 +61,7 @@ export class DatastoreComponent implements OnInit, OnDestroy {
         distinctUntilChanged((prev, curr) => prev[0] === curr[0]),
         tap(async expression => {
           const roomQuery = await DataStore.query(FvDRoom, r => r.name('eq', params.id));
-          const originalRoom = roomQuery && roomQuery.length > 0 ? roomQuery[0] : new FvDRoom({name: params.id});
+          const originalRoom = roomQuery && roomQuery.length > 0 ? roomQuery[0] : new FvDRoom({ name: params.id });
           const fvDRoom = await DataStore.save(
             FvDRoom.copyOf(originalRoom, updated => {
               updated.name = params.id;
@@ -68,22 +69,31 @@ export class DatastoreComponent implements OnInit, OnDestroy {
           );
 
           const userQuery = (await DataStore.query(FvDUser)).filter(u => u.roomID === fvDRoom.id);
-          const originalUser = userQuery && userQuery.length > 0 ? userQuery[0] : new FvDUser({roomID: params.id});
+          const originalUser = userQuery && userQuery.length > 0 ? userQuery[0] : new FvDUser({ roomID: params.id });
           const fvDUser = await DataStore.save(
             FvDUser.copyOf(originalUser, updated => {
               updated.roomID = fvDRoom.id;
               updated.expression = expression;
             })
           );
-          console.log(fvDRoom, fvDUser);
         }));
     })).subscribe();
   }
 
   emotionCount(params: Params, emotion: string): Observable<number> {
     const count$ = new BehaviorSubject(0);
-    DataStore.observe(FvDUser).subscribe(msg => {
-      count$.next(msg.element.expression.filter(e => e === emotion).length);
+    DataStore.observe(FvDUser).subscribe(async msg => {
+      // count$.next(msg.element.expression.filter(e => e === emotion).length);
+      const roomQuery = await DataStore.query(FvDRoom, r => r.name('eq', params.id));
+      const originalRoom = roomQuery && roomQuery.length > 0 ? roomQuery[0] : null;
+      if (originalRoom) {
+        const userQuery = (await DataStore.query(FvDUser)).filter(u => u.roomID === originalRoom.id);
+        let count = 0;
+        userQuery.filter(u => u.expression.includes(emotion)).forEach(user => {
+          count = count + user?.expression.length || 0;
+        });
+        count$.next(count);
+      }
     });
     return count$;
   }

@@ -85,6 +85,7 @@ export const schema = {
                         "name": "byRoom",
                         "fields": [
                             "roomID",
+                            "id",
                             "expression"
                         ]
                     }
@@ -94,5 +95,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "6cffc23f978cbaaa9350fadb856274c8"
+    "version": "05273f66de051b17eb060c7acfe1778b"
 };

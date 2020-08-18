@@ -5,7 +5,7 @@ type FvDRoom @model {
 }
 
 type FvDUser @model
-  @key(name: "byRoom", fields: ["roomID", "expression"]) {
+  @key(name: "byRoom", fields: ["roomID", "id", "expression"]) {
   id: ID!
   roomID: ID!
   expression: [String]
