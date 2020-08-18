@@ -1,2 +1,8 @@
 <h1>Datastore Results</h1>
-<app-faces></app-faces>
+<app-faces
+  [happy]="happy$ | async"
+  [sad]="sad$ | async"
+  [neutral]="neutral$ | async"
+  [surprised]="surprised$ | async"
+  [angry]="angry$ | async"
+  ></app-faces>
