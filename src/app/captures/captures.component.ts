@@ -4,7 +4,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy, Out
 import * as faceapi from 'face-api.js';
 import { Observable, BehaviorSubject, from, Subscription } from 'rxjs';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { map, shareReplay } from 'rxjs/operators';
+import { map, shareReplay, min } from 'rxjs/operators';
 import { async } from 'rxjs/internal/scheduler/async';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
@@ -35,7 +35,7 @@ export class CapturesComponent implements AfterViewInit, OnDestroy {
   private mediaStream: MediaStream = null;
   /** width and height of the active video stream */
   private activeVideoSettings: MediaTrackSettings = null;
-  private _MINCONF = 0.5;
+  private _MINCONF = 0.7;
 
   model: any;
   predictions: any;
@@ -48,7 +48,7 @@ export class CapturesComponent implements AfterViewInit, OnDestroy {
       shareReplay()
     );
   showBoxes = true;
-  constructor(private breakpointObserver: BreakpointObserver) {  }
+  constructor(private breakpointObserver: BreakpointObserver) { }
 
   ngAfterViewInit(): void {
     this.detectAvailableDevices()
@@ -175,21 +175,25 @@ export class CapturesComponent implements AfterViewInit, OnDestroy {
 
           setInterval(async () => {
             const detections = await faceapi.detectAllFaces(
-              this.video.nativeElement, new faceapi.SsdMobilenetv1Options({minConfidence: this._MINCONF}))
+              this.video.nativeElement, new faceapi.SsdMobilenetv1Options({ minConfidence: this._MINCONF }))
               .withFaceExpressions();
             this.loading$.next(false);
-            const videoBounds = this.video.nativeElement.getBoundingClientRect() as DOMRect;
-            const detectionsForSize = faceapi.resizeResults(detections,
-              { width: videoBounds.width,
-                height: videoBounds.height
-            });
-            const canvas = document.getElementById('overlay') as HTMLCanvasElement;
-            canvas.width = videoBounds.width;
-            canvas.height = videoBounds.height;
-            canvas.style.position = `absolute`;
-            canvas.style.top = `${videoBounds.top}px`;
-            canvas.style.left = `${this.video.nativeElement.offsetLeft}px`;
-            faceapi.draw.drawDetections(canvas, detectionsForSize);
+            if (this.showBoxes) {
+              const videoBounds = this.video.nativeElement.getBoundingClientRect() as DOMRect;
+              const detectionsForSize = faceapi.resizeResults(detections,
+                {
+                  width: videoBounds.width,
+                  height: videoBounds.height
+                });
+              const canvas = document.getElementById('overlay') as HTMLCanvasElement;
+              canvas.width = videoBounds.width;
+              canvas.height = videoBounds.height;
+              canvas.style.position = `absolute`;
+              canvas.style.top = `${videoBounds.top}px`;
+              canvas.style.left = `${this.video.nativeElement.offsetLeft}px`;
+              faceapi.draw.drawDetections(canvas, detectionsForSize);
+              faceapi.draw.drawFaceExpressions(canvas, detectionsForSize, this._MINCONF);
+            }
             this.expressions$.next(detections
               .map((r) => {
                 if (r.detection.score > this._MINCONF) {
@@ -198,7 +202,7 @@ export class CapturesComponent implements AfterViewInit, OnDestroy {
                   );
                 }
               }));
-          }, 500);
+          }, 1000);
 
           this.activeVideoSettings = stream.getVideoTracks()[0].getSettings();
           const activeDeviceId: string = this.getDeviceIdFromMediaStreamTrack(stream.getVideoTracks()[0]);
@@ -290,7 +294,7 @@ export class CapturesComponent implements AfterViewInit, OnDestroy {
         });
     });
   }
-  showBoxesChange(event: MatSlideToggleChange): void{
+  showBoxesChange(event: MatSlideToggleChange): void {
     this.showBoxes = event.checked;
   }
 }
