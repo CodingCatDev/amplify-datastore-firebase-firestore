@@ -6,7 +6,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import * as firebase from 'firebase/app';
 import { DataStore } from '@aws-amplify/datastore';
 import { FvDRoom, FvDUser } from 'src/models';
-
+import { Amplify } from '@aws-amplify/core';
 @Component({
   selector: 'app-datastore',
   templateUrl: './datastore.component.html',
@@ -23,7 +23,9 @@ export class DatastoreComponent implements OnInit, OnDestroy {
   public angry$: Observable<number>;
   constructor(
     private route: ActivatedRoute,
-    private fireAuth: AngularFireAuth) { }
+    private fireAuth: AngularFireAuth) {
+        Amplify.Logger.LOG_LEVEL = 'DEBUG';
+     }
 
   ngOnInit(): void {
     this.fireAuth.user.pipe(
