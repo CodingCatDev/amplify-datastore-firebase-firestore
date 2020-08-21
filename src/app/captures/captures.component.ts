@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy, Out
 // import * as mobilenet from '@tensorflow-models/mobilenet';
 // import * as tf from '@tensorflow/tfjs';
 import * as faceapi from 'face-api.js';
-import { Observable, BehaviorSubject, from, Subscription } from 'rxjs';
+import { Observable, BehaviorSubject, from, Subscription, timer, Subject } from 'rxjs';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { map, shareReplay, min } from 'rxjs/operators';
+import { map, shareReplay, min, takeUntil } from 'rxjs/operators';
 import { async } from 'rxjs/internal/scheduler/async';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
@@ -36,6 +36,7 @@ export class CapturesComponent implements AfterViewInit, OnDestroy {
   /** width and height of the active video stream */
   private activeVideoSettings: MediaTrackSettings = null;
   private _MINCONF = 0.7;
+  private destroy$ = new Subject<boolean>();
 
   model: any;
   predictions: any;
@@ -66,6 +67,7 @@ export class CapturesComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.stopMediaTracks();
     this.unsubscribeFromSubscriptions();
+    this.destroy$.next(true);
   }
 
   private getMediaConstraintsForDevice(deviceId: string, baseMediaTrackConstraints: MediaTrackConstraints): MediaTrackConstraints {
@@ -173,36 +175,38 @@ export class CapturesComponent implements AfterViewInit, OnDestroy {
           // await faceapi.loadFaceLandmarkModel(MODEL_URL);
           await faceapi.loadFaceExpressionModel(MODEL_URL);
 
-          setInterval(async () => {
-            const detections = await faceapi.detectAllFaces(
-              this.video.nativeElement, new faceapi.SsdMobilenetv1Options({ minConfidence: this._MINCONF }))
-              .withFaceExpressions();
-            this.loading$.next(false);
-            if (this.showBoxes) {
-              const videoBounds = this.video.nativeElement.getBoundingClientRect() as DOMRect;
-              const detectionsForSize = faceapi.resizeResults(detections,
-                {
-                  width: videoBounds.width,
-                  height: videoBounds.height
-                });
-              const canvas = document.getElementById('overlay') as HTMLCanvasElement;
-              canvas.width = videoBounds.width;
-              canvas.height = videoBounds.height;
-              canvas.style.position = `absolute`;
-              canvas.style.top = `${videoBounds.top}px`;
-              canvas.style.left = `${this.video.nativeElement.offsetLeft}px`;
-              faceapi.draw.drawDetections(canvas, detectionsForSize);
-              faceapi.draw.drawFaceExpressions(canvas, detectionsForSize, this._MINCONF);
-            }
-            this.expressions$.next(detections
-              .map((r) => {
-                if (r.detection.score > this._MINCONF) {
-                  return Object.keys(r.expressions).reduce((a, b) =>
-                    r.expressions[a] > r.expressions[b] ? a : b
-                  );
-                }
-              }));
-          }, 1000);
+          timer(0, 1000).pipe(
+            takeUntil(this.destroy$),
+            map(async () => {
+              const detections = await faceapi.detectAllFaces(
+                this.video.nativeElement, new faceapi.SsdMobilenetv1Options({ minConfidence: this._MINCONF }))
+                .withFaceExpressions();
+              this.loading$.next(false);
+              if (this.showBoxes) {
+                const videoBounds = this.video.nativeElement.getBoundingClientRect() as DOMRect;
+                const detectionsForSize = faceapi.resizeResults(detections,
+                  {
+                    width: videoBounds.width,
+                    height: videoBounds.height
+                  });
+                const canvas = document.getElementById('overlay') as HTMLCanvasElement;
+                canvas.width = videoBounds.width;
+                canvas.height = videoBounds.height;
+                canvas.style.position = `absolute`;
+                canvas.style.top = `${videoBounds.top}px`;
+                canvas.style.left = `${this.video.nativeElement.offsetLeft}px`;
+                faceapi.draw.drawDetections(canvas, detectionsForSize);
+                faceapi.draw.drawFaceExpressions(canvas, detectionsForSize, this._MINCONF);
+              }
+              this.expressions$.next(detections
+                .map((r) => {
+                  if (r.detection.score > this._MINCONF) {
+                    return Object.keys(r.expressions).reduce((a, b) =>
+                      r.expressions[a] > r.expressions[b] ? a : b
+                    );
+                  }
+                }));
+            })).subscribe();
 
           this.activeVideoSettings = stream.getVideoTracks()[0].getSettings();
           const activeDeviceId: string = this.getDeviceIdFromMediaStreamTrack(stream.getVideoTracks()[0]);
