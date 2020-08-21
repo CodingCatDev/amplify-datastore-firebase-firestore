@@ -86,11 +86,11 @@ export class DatastoreComponent implements OnInit, OnDestroy {
               fvDUser = await DataStore.save(
                 FvDUser.copyOf(userQuery[userQuery.length - 1], updated => {
                   updated.roomID = fvDRoom.id;
-                  updated.expression = expression || [];
+                  updated.expression = expression || [''];
                 })
               );
             } else {
-              fvDUser = await DataStore.save(new FvDUser({ roomID: fvDRoom.id, uid: user.uid, expression: [] }));
+              fvDUser = await DataStore.save(new FvDUser({ roomID: fvDRoom.id, uid: user.uid, expression: [''] }));
             }
           }));
 
