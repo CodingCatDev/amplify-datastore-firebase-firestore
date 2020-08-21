@@ -21,6 +21,8 @@ export class DatastoreComponent implements OnInit, OnDestroy {
   public neutral$: Observable<number>;
   public surprised$: Observable<number>;
   public angry$: Observable<number>;
+
+  public user$: Observable<firebase.User>;
   constructor(
     private route: ActivatedRoute,
     private fireAuth: AngularFireAuth) {
@@ -29,7 +31,7 @@ export class DatastoreComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fireAuth.user.pipe(
+    this.user$ = this.fireAuth.user.pipe(
       takeUntil(this.destroy$),
       tap(async user => {
         if (user == null) {
@@ -42,7 +44,7 @@ export class DatastoreComponent implements OnInit, OnDestroy {
         } else {
           this.updateRoom(user);
         }
-      })).subscribe();
+      }));
   }
 
   ngOnDestroy(): void {
@@ -50,40 +52,53 @@ export class DatastoreComponent implements OnInit, OnDestroy {
   }
 
   updateRoom(user: firebase.User): void {
-    this.route.params.pipe(switchMap(params => {
-      this.happy$ = this.emotionCount(params, 'happy');
-      this.sad$ = this.emotionCount(params, 'sad');
-      this.neutral$ = this.emotionCount(params, 'neutral');
-      this.surprised$ = this.emotionCount(params, 'surprised');
-      this.angry$ = this.emotionCount(params, 'angry');
-      return this.expressions$.pipe(
-        takeUntil(this.destroy$),
-        distinctUntilChanged((prev, curr) => prev[0] === curr[0]),
-        tap(async expression => {
-          const roomQuery = await DataStore.query(FvDRoom, r => r.name('eq', params.id));
-          const originalRoom = roomQuery && roomQuery.length > 0 ? roomQuery[0] : new FvDRoom({ name: params.id });
-          const fvDRoom = await DataStore.save(
-            FvDRoom.copyOf(originalRoom, updated => {
-              updated.name = params.id;
-            })
-          );
+    this.route.params.pipe(
+      takeUntil(this.destroy$),
+      switchMap(params => {
+        this.happy$ = this.emotionCount(params, 'happy');
+        this.sad$ = this.emotionCount(params, 'sad');
+        this.neutral$ = this.emotionCount(params, 'neutral');
+        this.surprised$ = this.emotionCount(params, 'surprised');
+        this.angry$ = this.emotionCount(params, 'angry');
 
-          const userQuery = (await DataStore.query(FvDUser)).filter(u => u.roomID === fvDRoom.id);
-          const originalUser = userQuery && userQuery.length > 0 ? userQuery[0] : new FvDUser({ roomID: params.id });
-          const fvDUser = await DataStore.save(
-            FvDUser.copyOf(originalUser, updated => {
-              updated.roomID = fvDRoom.id;
-              updated.expression = expression;
-            })
-          );
-        }));
-    })).subscribe();
+        return this.expressions$.pipe(
+          takeUntil(this.destroy$),
+          distinctUntilChanged((prev, curr) => prev[0] === curr[0]),
+          tap(async expression => {
+            const roomQuery = await DataStore.query(FvDRoom, r => r.name('eq', params.id));
+            let fvDRoom;
+            if (roomQuery && roomQuery.length > 0) {
+              fvDRoom = await DataStore.save(
+                FvDRoom.copyOf(roomQuery[roomQuery.length - 1], updated => {
+                  updated.name = params.id;
+                })
+              );
+            } else {
+              fvDRoom = await DataStore.save(new FvDRoom({ name: params.id }));
+            }
+            console.log(fvDRoom);
+            const userQuery = (await DataStore.query(FvDUser)).filter(u => u.roomID === fvDRoom.id && u.uid === user.uid);
+
+            let fvDUser;
+            if (userQuery && userQuery.length > 0) {
+              fvDUser = await DataStore.save(
+                FvDUser.copyOf(userQuery[userQuery.length - 1], updated => {
+                  updated.roomID = fvDRoom.id;
+                  updated.expression = expression || [];
+                })
+              );
+            } else {
+              fvDUser = await DataStore.save(new FvDUser({ roomID: fvDRoom.id, uid: user.uid, expression: [] }));
+            }
+            console.log(fvDUser);
+          }));
+
+      })).subscribe();
   }
 
   emotionCount(params: Params, emotion: string): Observable<number> {
     const count$ = new BehaviorSubject(0);
     DataStore.observe(FvDUser).subscribe(async msg => {
-      // count$.next(msg.element.expression.filter(e => e === emotion).length);
       const roomQuery = await DataStore.query(FvDRoom, r => r.name('eq', params.id));
       const originalRoom = roomQuery && roomQuery.length > 0 ? roomQuery[0] : null;
       if (originalRoom) {
@@ -93,6 +108,8 @@ export class DatastoreComponent implements OnInit, OnDestroy {
           count = count + user?.expression.length || 0;
         });
         count$.next(count);
+      } else {
+        count$.next(0);
       }
     });
     return count$;

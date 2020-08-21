@@ -6,9 +6,9 @@ subscription OnCreateFvDRoom {
     users {
       items {
         id
+        uid
         roomID
         expression
-        last_changed
         _version
         _deleted
         _lastChangedAt
@@ -32,9 +32,9 @@ subscription OnUpdateFvDRoom {
     users {
       items {
         id
+        uid
         roomID
         expression
-        last_changed
         _version
         _deleted
         _lastChangedAt
@@ -58,9 +58,9 @@ subscription OnDeleteFvDRoom {
     users {
       items {
         id
+        uid
         roomID
         expression
-        last_changed
         _version
         _deleted
         _lastChangedAt
@@ -80,9 +80,9 @@ subscription OnDeleteFvDRoom {
 subscription OnCreateFvDUser {
   onCreateFvDUser {
     id
+    uid
     roomID
     expression
-    last_changed
     _version
     _deleted
     _lastChangedAt
@@ -93,9 +93,9 @@ subscription OnCreateFvDUser {
 subscription OnUpdateFvDUser {
   onUpdateFvDUser {
     id
+    uid
     roomID
     expression
-    last_changed
     _version
     _deleted
     _lastChangedAt
@@ -106,9 +106,9 @@ subscription OnUpdateFvDUser {
 subscription OnDeleteFvDUser {
   onDeleteFvDUser {
     id
+    uid
     roomID
     expression
-    last_changed
     _version
     _deleted
     _lastChangedAt

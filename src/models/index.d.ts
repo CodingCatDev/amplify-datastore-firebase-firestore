@@ -14,9 +14,9 @@ export declare class FvDRoom {
 
 export declare class FvDUser {
   readonly id: string;
+  readonly uid: string;
   readonly roomID: string;
   readonly expression?: string[];
-  readonly last_changed?: string;
   constructor(init: ModelInit<FvDUser>);
   static copyOf(source: FvDUser, mutator: (draft: MutableModel<FvDUser>) => MutableModel<FvDUser> | void): FvDUser;
 }

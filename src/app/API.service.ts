@@ -71,16 +71,16 @@ export type DeleteFvDRoomInput = {
 
 export type CreateFvDUserInput = {
   id?: string | null;
+  uid: string;
   roomID: string;
   expression?: Array<string | null> | null;
-  last_changed?: string | null;
   _version?: number | null;
 };
 
 export type ModelFvDUserConditionInput = {
+  uid?: ModelIDInput | null;
   roomID?: ModelIDInput | null;
   expression?: ModelStringInput | null;
-  last_changed?: ModelStringInput | null;
   and?: Array<ModelFvDUserConditionInput | null> | null;
   or?: Array<ModelFvDUserConditionInput | null> | null;
   not?: ModelFvDUserConditionInput | null;
@@ -104,9 +104,9 @@ export type ModelIDInput = {
 
 export type UpdateFvDUserInput = {
   id: string;
+  uid?: string | null;
   roomID?: string | null;
   expression?: Array<string | null> | null;
-  last_changed?: string | null;
   _version?: number | null;
 };
 
@@ -125,9 +125,9 @@ export type ModelFvDRoomFilterInput = {
 
 export type ModelFvDUserFilterInput = {
   id?: ModelIDInput | null;
+  uid?: ModelIDInput | null;
   roomID?: ModelIDInput | null;
   expression?: ModelStringInput | null;
-  last_changed?: ModelStringInput | null;
   and?: Array<ModelFvDUserFilterInput | null> | null;
   or?: Array<ModelFvDUserFilterInput | null> | null;
   not?: ModelFvDUserFilterInput | null;
@@ -142,9 +142,9 @@ export type CreateFvDRoomMutation = {
     items: Array<{
       __typename: "FvDUser";
       id: string;
+      uid: string;
       roomID: string;
       expression: Array<string | null> | null;
-      last_changed: string | null;
       _version: number;
       _deleted: boolean | null;
       _lastChangedAt: number;
@@ -170,9 +170,9 @@ export type UpdateFvDRoomMutation = {
     items: Array<{
       __typename: "FvDUser";
       id: string;
+      uid: string;
       roomID: string;
       expression: Array<string | null> | null;
-      last_changed: string | null;
       _version: number;
       _deleted: boolean | null;
       _lastChangedAt: number;
@@ -198,9 +198,9 @@ export type DeleteFvDRoomMutation = {
     items: Array<{
       __typename: "FvDUser";
       id: string;
+      uid: string;
       roomID: string;
       expression: Array<string | null> | null;
-      last_changed: string | null;
       _version: number;
       _deleted: boolean | null;
       _lastChangedAt: number;
@@ -220,9 +220,9 @@ export type DeleteFvDRoomMutation = {
 export type CreateFvDUserMutation = {
   __typename: "FvDUser";
   id: string;
+  uid: string;
   roomID: string;
   expression: Array<string | null> | null;
-  last_changed: string | null;
   _version: number;
   _deleted: boolean | null;
   _lastChangedAt: number;
@@ -233,9 +233,9 @@ export type CreateFvDUserMutation = {
 export type UpdateFvDUserMutation = {
   __typename: "FvDUser";
   id: string;
+  uid: string;
   roomID: string;
   expression: Array<string | null> | null;
-  last_changed: string | null;
   _version: number;
   _deleted: boolean | null;
   _lastChangedAt: number;
@@ -246,9 +246,9 @@ export type UpdateFvDUserMutation = {
 export type DeleteFvDUserMutation = {
   __typename: "FvDUser";
   id: string;
+  uid: string;
   roomID: string;
   expression: Array<string | null> | null;
-  last_changed: string | null;
   _version: number;
   _deleted: boolean | null;
   _lastChangedAt: number;
@@ -286,9 +286,9 @@ export type GetFvDRoomQuery = {
     items: Array<{
       __typename: "FvDUser";
       id: string;
+      uid: string;
       roomID: string;
       expression: Array<string | null> | null;
-      last_changed: string | null;
       _version: number;
       _deleted: boolean | null;
       _lastChangedAt: number;
@@ -331,9 +331,9 @@ export type SyncFvDUsersQuery = {
   items: Array<{
     __typename: "FvDUser";
     id: string;
+    uid: string;
     roomID: string;
     expression: Array<string | null> | null;
-    last_changed: string | null;
     _version: number;
     _deleted: boolean | null;
     _lastChangedAt: number;
@@ -347,9 +347,9 @@ export type SyncFvDUsersQuery = {
 export type GetFvDUserQuery = {
   __typename: "FvDUser";
   id: string;
+  uid: string;
   roomID: string;
   expression: Array<string | null> | null;
-  last_changed: string | null;
   _version: number;
   _deleted: boolean | null;
   _lastChangedAt: number;
@@ -362,9 +362,9 @@ export type ListFvDUsersQuery = {
   items: Array<{
     __typename: "FvDUser";
     id: string;
+    uid: string;
     roomID: string;
     expression: Array<string | null> | null;
-    last_changed: string | null;
     _version: number;
     _deleted: boolean | null;
     _lastChangedAt: number;
@@ -384,9 +384,9 @@ export type OnCreateFvDRoomSubscription = {
     items: Array<{
       __typename: "FvDUser";
       id: string;
+      uid: string;
       roomID: string;
       expression: Array<string | null> | null;
-      last_changed: string | null;
       _version: number;
       _deleted: boolean | null;
       _lastChangedAt: number;
@@ -412,9 +412,9 @@ export type OnUpdateFvDRoomSubscription = {
     items: Array<{
       __typename: "FvDUser";
       id: string;
+      uid: string;
       roomID: string;
       expression: Array<string | null> | null;
-      last_changed: string | null;
       _version: number;
       _deleted: boolean | null;
       _lastChangedAt: number;
@@ -440,9 +440,9 @@ export type OnDeleteFvDRoomSubscription = {
     items: Array<{
       __typename: "FvDUser";
       id: string;
+      uid: string;
       roomID: string;
       expression: Array<string | null> | null;
-      last_changed: string | null;
       _version: number;
       _deleted: boolean | null;
       _lastChangedAt: number;
@@ -462,9 +462,9 @@ export type OnDeleteFvDRoomSubscription = {
 export type OnCreateFvDUserSubscription = {
   __typename: "FvDUser";
   id: string;
+  uid: string;
   roomID: string;
   expression: Array<string | null> | null;
-  last_changed: string | null;
   _version: number;
   _deleted: boolean | null;
   _lastChangedAt: number;
@@ -475,9 +475,9 @@ export type OnCreateFvDUserSubscription = {
 export type OnUpdateFvDUserSubscription = {
   __typename: "FvDUser";
   id: string;
+  uid: string;
   roomID: string;
   expression: Array<string | null> | null;
-  last_changed: string | null;
   _version: number;
   _deleted: boolean | null;
   _lastChangedAt: number;
@@ -488,9 +488,9 @@ export type OnUpdateFvDUserSubscription = {
 export type OnDeleteFvDUserSubscription = {
   __typename: "FvDUser";
   id: string;
+  uid: string;
   roomID: string;
   expression: Array<string | null> | null;
-  last_changed: string | null;
   _version: number;
   _deleted: boolean | null;
   _lastChangedAt: number;
@@ -516,9 +516,9 @@ export class APIService {
             items {
               __typename
               id
+              uid
               roomID
               expression
-              last_changed
               _version
               _deleted
               _lastChangedAt
@@ -560,9 +560,9 @@ export class APIService {
             items {
               __typename
               id
+              uid
               roomID
               expression
-              last_changed
               _version
               _deleted
               _lastChangedAt
@@ -604,9 +604,9 @@ export class APIService {
             items {
               __typename
               id
+              uid
               roomID
               expression
-              last_changed
               _version
               _deleted
               _lastChangedAt
@@ -642,9 +642,9 @@ export class APIService {
         createFvDUser(input: $input, condition: $condition) {
           __typename
           id
+          uid
           roomID
           expression
-          last_changed
           _version
           _deleted
           _lastChangedAt
@@ -671,9 +671,9 @@ export class APIService {
         updateFvDUser(input: $input, condition: $condition) {
           __typename
           id
+          uid
           roomID
           expression
-          last_changed
           _version
           _deleted
           _lastChangedAt
@@ -700,9 +700,9 @@ export class APIService {
         deleteFvDUser(input: $input, condition: $condition) {
           __typename
           id
+          uid
           roomID
           expression
-          last_changed
           _version
           _deleted
           _lastChangedAt
@@ -778,9 +778,9 @@ export class APIService {
             items {
               __typename
               id
+              uid
               roomID
               expression
-              last_changed
               _version
               _deleted
               _lastChangedAt
@@ -859,9 +859,9 @@ export class APIService {
           items {
             __typename
             id
+            uid
             roomID
             expression
-            last_changed
             _version
             _deleted
             _lastChangedAt
@@ -895,9 +895,9 @@ export class APIService {
         getFvDUser(id: $id) {
           __typename
           id
+          uid
           roomID
           expression
-          last_changed
           _version
           _deleted
           _lastChangedAt
@@ -924,9 +924,9 @@ export class APIService {
           items {
             __typename
             id
+            uid
             roomID
             expression
-            last_changed
             _version
             _deleted
             _lastChangedAt
@@ -966,9 +966,9 @@ export class APIService {
             items {
               __typename
               id
+              uid
               roomID
               expression
-              last_changed
               _version
               _deleted
               _lastChangedAt
@@ -1002,9 +1002,9 @@ export class APIService {
             items {
               __typename
               id
+              uid
               roomID
               expression
-              last_changed
               _version
               _deleted
               _lastChangedAt
@@ -1038,9 +1038,9 @@ export class APIService {
             items {
               __typename
               id
+              uid
               roomID
               expression
-              last_changed
               _version
               _deleted
               _lastChangedAt
@@ -1068,9 +1068,9 @@ export class APIService {
         onCreateFvDUser {
           __typename
           id
+          uid
           roomID
           expression
-          last_changed
           _version
           _deleted
           _lastChangedAt
@@ -1089,9 +1089,9 @@ export class APIService {
         onUpdateFvDUser {
           __typename
           id
+          uid
           roomID
           expression
-          last_changed
           _version
           _deleted
           _lastChangedAt
@@ -1110,9 +1110,9 @@ export class APIService {
         onDeleteFvDUser {
           __typename
           id
+          uid
           roomID
           expression
-          last_changed
           _version
           _deleted
           _lastChangedAt

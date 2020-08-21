@@ -5,9 +5,9 @@ type FvDRoom @model {
 }
 
 type FvDUser @model
-  @key(name: "byRoom", fields: ["roomID", "id", "expression"]) {
+  @key(name: "byRoom", fields: ["roomID", "uid", "expression"]) {
   id: ID!
+  uid: ID!
   roomID: ID!
   expression: [String]
-  last_changed: AWSDateTime
 }

@@ -50,6 +50,13 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "uid": {
+                    "name": "uid",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "roomID": {
                     "name": "roomID",
                     "isArray": false,
@@ -61,13 +68,6 @@ export const schema = {
                     "name": "expression",
                     "isArray": true,
                     "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "last_changed": {
-                    "name": "last_changed",
-                    "isArray": false,
-                    "type": "AWSDateTime",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -85,7 +85,7 @@ export const schema = {
                         "name": "byRoom",
                         "fields": [
                             "roomID",
-                            "id",
+                            "uid",
                             "expression"
                         ]
                     }
@@ -95,5 +95,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "05273f66de051b17eb060c7acfe1778b"
+    "version": "11d8d8666b75aca92dab270377cdebb1"
 };

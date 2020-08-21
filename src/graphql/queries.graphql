@@ -35,9 +35,9 @@ query GetFvDRoom($id: ID!) {
     users {
       items {
         id
+        uid
         roomID
         expression
-        last_changed
         _version
         _deleted
         _lastChangedAt
@@ -91,9 +91,9 @@ query SyncFvDUsers(
   ) {
     items {
       id
+      uid
       roomID
       expression
-      last_changed
       _version
       _deleted
       _lastChangedAt
@@ -107,9 +107,9 @@ query SyncFvDUsers(
 query GetFvDUser($id: ID!) {
   getFvDUser(id: $id) {
     id
+    uid
     roomID
     expression
-    last_changed
     _version
     _deleted
     _lastChangedAt
@@ -125,9 +125,9 @@ query ListFvDUsers(
   listFvDUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
+      uid
       roomID
       expression
-      last_changed
       _version
       _deleted
       _lastChangedAt

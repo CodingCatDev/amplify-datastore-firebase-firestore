@@ -9,9 +9,9 @@ mutation CreateFvDRoom(
     users {
       items {
         id
+        uid
         roomID
         expression
-        last_changed
         _version
         _deleted
         _lastChangedAt
@@ -38,9 +38,9 @@ mutation UpdateFvDRoom(
     users {
       items {
         id
+        uid
         roomID
         expression
-        last_changed
         _version
         _deleted
         _lastChangedAt
@@ -67,9 +67,9 @@ mutation DeleteFvDRoom(
     users {
       items {
         id
+        uid
         roomID
         expression
-        last_changed
         _version
         _deleted
         _lastChangedAt
@@ -92,9 +92,9 @@ mutation CreateFvDUser(
 ) {
   createFvDUser(input: $input, condition: $condition) {
     id
+    uid
     roomID
     expression
-    last_changed
     _version
     _deleted
     _lastChangedAt
@@ -108,9 +108,9 @@ mutation UpdateFvDUser(
 ) {
   updateFvDUser(input: $input, condition: $condition) {
     id
+    uid
     roomID
     expression
-    last_changed
     _version
     _deleted
     _lastChangedAt
@@ -124,9 +124,9 @@ mutation DeleteFvDUser(
 ) {
   deleteFvDUser(input: $input, condition: $condition) {
     id
+    uid
     roomID
     expression
-    last_changed
     _version
     _deleted
     _lastChangedAt
