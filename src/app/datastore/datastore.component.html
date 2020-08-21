@@ -1,8 +1,5 @@
-<h1>Datastore Results: {{(user$ | async)?.uid}}</h1>
-<app-faces
-  [happy]="happy$ | async"
-  [sad]="sad$ | async"
-  [neutral]="neutral$ | async"
-  [surprised]="surprised$ | async"
-  [angry]="angry$ | async"
-  ></app-faces>
+<h1>Datastore Results</h1>
+<h3>User: {{(user$ | async)?.uid}}</h3>
+<h3>Room: {{(currentRoom$ | async)?.id}}</h3>
+<app-faces [happy]="happy$ | async" [sad]="sad$ | async" [neutral]="neutral$ | async" [surprised]="surprised$ | async"
+  [angry]="angry$ | async"></app-faces>

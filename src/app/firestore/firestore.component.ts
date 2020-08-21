@@ -21,6 +21,7 @@ export class FirestoreComponent implements OnInit, OnDestroy {
   public surprised$: Observable<number>;
   public angry$: Observable<number>;
   public user$: Observable<firebase.User>;
+  currentRoom$ = new BehaviorSubject<string>(null);
 
   constructor(
     private route: ActivatedRoute,
@@ -52,6 +53,7 @@ export class FirestoreComponent implements OnInit, OnDestroy {
     this.route.params.pipe(
       takeUntil(this.destroy$),
       switchMap(params => {
+        this.currentRoom$.next(params.id);
         this.setUserStatus(user, params.id);
 
         this.happy$ = this.emotionCount(params, 'happy');

@@ -23,11 +23,13 @@ export class DatastoreComponent implements OnInit, OnDestroy {
   public angry$: Observable<number>;
 
   public user$: Observable<firebase.User>;
+
+  currentRoom$ = new BehaviorSubject<FvDRoom>(null);
   constructor(
     private route: ActivatedRoute,
     private fireAuth: AngularFireAuth) {
     // Turn this on if you want to debug
-    // Amplify.Logger.LOG_LEVEL = 'DEBUG';
+    Amplify.Logger.LOG_LEVEL = 'DEBUG';
   }
 
   ngOnInit(): void {
@@ -76,8 +78,8 @@ export class DatastoreComponent implements OnInit, OnDestroy {
             } else {
               fvDRoom = await DataStore.save(new FvDRoom({ name: params.id }));
             }
-            console.log(fvDRoom);
-            const userQuery = (await DataStore.query(FvDUser)).filter(u => u.roomID === fvDRoom.id && u.uid === user.uid);
+            this.currentRoom$.next(fvDRoom);
+            const userQuery = (await DataStore.query(FvDUser)).filter(u => u.roomID === this.currentRoom$.value.id && u.uid === user.uid);
 
             let fvDUser;
             if (userQuery && userQuery.length > 0) {
@@ -90,7 +92,6 @@ export class DatastoreComponent implements OnInit, OnDestroy {
             } else {
               fvDUser = await DataStore.save(new FvDUser({ roomID: fvDRoom.id, uid: user.uid, expression: [] }));
             }
-            console.log(fvDUser);
           }));
 
       })).subscribe();
@@ -99,10 +100,12 @@ export class DatastoreComponent implements OnInit, OnDestroy {
   emotionCount(params: Params, emotion: string): Observable<number> {
     const count$ = new BehaviorSubject(0);
     DataStore.observe(FvDUser).subscribe(async msg => {
-      const roomQuery = await DataStore.query(FvDRoom, r => r.name('eq', params.id));
-      const originalRoom = roomQuery && roomQuery.length > 0 ? roomQuery[0] : null;
-      if (originalRoom) {
-        const userQuery = (await DataStore.query(FvDUser)).filter(u => u.roomID === originalRoom.id);
+      if (this.currentRoom$.value != null) {
+
+        // Searching for all users in the current room.
+        console.log(`Searching for users in room: ${this.currentRoom$.value.id}, for emotion ${emotion}`);
+        const userQuery = (await DataStore.query(FvDUser)).filter(u => u.roomID === this.currentRoom$.value.id);
+        console.log(userQuery);
         let count = 0;
         userQuery.filter(u => u.expression.includes(emotion)).forEach(user => {
           count = count + user?.expression.length || 0;
