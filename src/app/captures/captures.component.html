@@ -1,13 +1,11 @@
-<ng-container
-  *ngTemplateOutlet="
+<ng-container *ngTemplateOutlet="
     main;
     context: {
       isHandset: isHandset$ | async,
       loading: loading$ | async,
       expressions: expressions$ | async
     }
-  "
-></ng-container>
+  "></ng-container>
 <ng-template #main let-isHandset="isHandset" let-loading="loading" let-expressions="expressions">
   <canvas id="overlay" [hidden]="!showBoxes"></canvas>
   <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="space-around">
@@ -19,10 +17,7 @@
           <button mat-icon-button (click)="rotateVideoInput(true)">
             <mat-icon>switch_video</mat-icon>
           </button>
-          <mat-slide-toggle
-          class="example-margin"
-          [checked]="showBoxes"
-          (change)="showBoxesChange($event)">
+          <mat-slide-toggle class="example-margin" [checked]="showBoxes" (change)="showBoxesChange($event)">
             Show Boxes
           </mat-slide-toggle>
         </mat-card-title>
@@ -42,7 +37,7 @@
       <video autoplay muted #video [fxFlex]="isHandset ? 100 : 50"></video>
       <div fxLayout="column" fxLayoutAlign="center center">
         <app-firestore [expressions$]="expressions$"></app-firestore>
-        <app-datastore [expressions$]="expressions$"></app-datastore>
+        <!-- <app-datastore [expressions$]="expressions$"></app-datastore> -->
       </div>
     </div>
 
