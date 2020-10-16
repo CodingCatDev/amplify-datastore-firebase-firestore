@@ -10,6 +10,11 @@
             "StackName": "amplify-datastorevsfirestore-dev-170157",
             "StackId": "arn:aws:cloudformation:us-east-1:971315828335:stack/amplify-datastorevsfirestore-dev-170157/6a9644e0-cb95-11ea-bc6a-0aa958b6917a",
             "AmplifyAppId": "dmns4ima6p8vw"
+        },
+        "categories": {
+            "auth": {
+                "datastorevsfirestorecfdc3dffcfdc3dff": {}
+            }
         }
     }
 }
