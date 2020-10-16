@@ -53,5 +53,21 @@ export const userUpdate = functions.database.ref('/status/{uid}').onUpdate(
     await Promise.all(promiseArray);
 
     // ... and write it to Firestore.
-    return userStatusFirestoreRef.set(eventStatus, {merge: true});
+    return userStatusFirestoreRef.set(eventStatus, { merge: true });
+  });
+
+export const expressionUpdate = functions.firestore.document(`/rooms/{roomId}/users/{userId}`)
+  .onUpdate((change, context) => {
+    const data = change.after.data();
+    if (!data) {
+      return false;     // If no data don't update
+    }
+    if (data && data['expression']) {
+      return firestore.doc(`/rooms/${context.params.roomId}/expression/${context.eventId}`).set(
+        data
+      );
+    } else {
+      console.log('No Expression found');
+      return false;     // If data has no expressions don't update
+    }
   });
