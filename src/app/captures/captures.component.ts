@@ -175,7 +175,7 @@ export class CapturesComponent implements AfterViewInit, OnDestroy {
           // await faceapi.loadFaceLandmarkModel(MODEL_URL);
           await faceapi.loadFaceExpressionModel(MODEL_URL);
 
-          timer(0, 1000).pipe(
+          timer(0, 1500).pipe(
             takeUntil(this.destroy$),
             map(async () => {
               const detections = await faceapi.detectAllFaces(

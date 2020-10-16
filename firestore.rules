@@ -5,8 +5,12 @@ service cloud.firestore {
       allow read, write: if false;
 
       match /rooms/{roomId} {
-        allow read;
-
+        match /expression/{expressionId} {
+          allow read: if true;
+        }
+        match /aggregate/{aggregateId} {
+          allow read: if true;
+        }
         match /users/{userId} {
           allow read: if true;
           allow write: if request.auth.uid != null && request.auth.uid == userId;
