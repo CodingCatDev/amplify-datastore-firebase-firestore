@@ -3,7 +3,7 @@
     <mat-card-content>
       <mat-form-field class="example-full-width">
         <mat-label>Room</mat-label>
-        <input matInput #roomNumber type="number">
+        <input matInput #roomNumber type="text">
       </mat-form-field>
       <a mat-raised-button [routerLink]="['/room/', roomNumber.value]">Enter</a>
     </mat-card-content>
