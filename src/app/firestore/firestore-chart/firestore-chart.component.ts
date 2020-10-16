@@ -14,7 +14,7 @@ import { Observable } from 'rxjs/internal/Observable';
 export class FirestoreChartComponent {
   private destroy$ = new Subject<boolean>();
 
-  view: any[] = [1920, 1080];
+  view: any[] = [1200, 720];
 
   // options
   legend = true;
@@ -52,37 +52,39 @@ export class FirestoreChartComponent {
         switchMap((params) =>
           firestore.collection<any>
             (`/rooms/${params.id}/aggregate`, ref =>
-              ref.orderBy('timestamp', 'desc')).valueChanges().pipe(
-                map(docs =>
-                  docs.map(doc => {
-                    return {
-                      name: doc.timestamp.toDate().getMinutes(),
-                      series: [
-                        {
-                          name: 'happy',
-                          value: doc.happy
-                        }
-                        , {
-                          name: 'sad',
-                          value: doc.sad
-                        }
-                        , {
-                          name: 'neutral',
-                          value: doc.neutral
-                        }
-                        , {
-                          name: 'surprised',
-                          value: doc.surprised
-                        }
-                        , {
-                          name: 'angry',
-                          value: doc.angry
-                        }
-                      ]
-                    };
-                  })
-                )
+              ref.orderBy('timestamp', 'desc').limit(5)
+            ).valueChanges().pipe(
+              map(docs =>
+                docs.map(doc => {
+                  const newDate = doc.timestamp.toDate();
+                  return {
+                    name: `${newDate.getUTCMinutes()}`,
+                    series: [
+                      {
+                        name: 'happy',
+                        value: doc.happy
+                      }
+                      , {
+                        name: 'sad',
+                        value: doc.sad
+                      }
+                      , {
+                        name: 'neutral',
+                        value: doc.neutral
+                      }
+                      , {
+                        name: 'surprised',
+                        value: doc.surprised
+                      }
+                      , {
+                        name: 'angry',
+                        value: doc.angry
+                      }
+                    ]
+                  };
+                })
               )
+            )
         )
       ).subscribe(c => this.multi = c)
   }
